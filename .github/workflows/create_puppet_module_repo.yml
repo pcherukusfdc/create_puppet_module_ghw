@@ -110,8 +110,8 @@ jobs:
       #REPO_name: ${{ steps.step1.outputs.REPO_name }}
       #PR_Number: ${{ steps.step1.outputs.PR_number }}
       
-  processing_release_manager2:
-    needs: processing_release_manager
+  processing_puppet_module_repo_creation_action:
+    needs: processing_puppet_module_repo_creation
     if: ${{ success() && needs.processing_release_manager.outputs.file_name == 'release.txt' }}
     runs-on: [ self-hosted, linux, code_release ]
     strategy:
@@ -120,8 +120,7 @@ jobs:
     steps:
     - id: step3
       name: Deploying puppet module
-      if: ${{ success() && needs.processing_release_manager.outputs.file_name == 'release.txt' }}
-      uses: pcherukusfdc/release_manager@main
+      uses: pcherukusfdc/create_puppet_module_repo@main
       with:
         repo_name: '${{ inputs.repo_name }}'
         pr_changes: ${{ matrix.list_of_changes }}
