@@ -1,0 +1,63 @@
+name: 'Action to create puppet module repository from template'
+description: 'create puppet module repository from template'
+inputs:
+  pr_changes:
+    require: true
+    type: string
+    
+runs:
+  using: "composite"
+  steps:
+  - id: step1
+    shell: bash
+    name: create puppet module repository from template
+    run: |
+      set -eo pipefail
+           
+      changes=${{ inputs.pr_changes }}
+      
+      echo "Changes to deploy $deploy_changes"
+      
+      echo "Extracting simlane and release version"
+      puppet_repo_name=$(echo $changes | cut -d: -f1)
+      team_name=$(echo $changes | cut -d: -f2)
+      
+      echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
+      gh repo list | awk '{print $1}' | sed 's/pcherukusfdc\///g'  | grep ^${puppet_repo_name}$
+      if [[ $? == 0 ]]
+      then
+        echo "Repository ${puppet_repo_name} already exist, quitting..!!"
+        exit 0
+      else
+        echo "Repository ${puppet_repo_name} does not exist, proceding to create.."
+      fi
+      
+      echo "Creating repository ${puppet_repo_name} in workspace "
+      echo "Cloning the template repo"
+      git clone 
+      
+      echo "Create repo from the template repo"
+      git clone --bare https://api.github.com/orgs/sfdc-bt-puppet/
+      
+      echo "Changing into puppet template repository"
+      cd ${}
+      
+      echo "Cloning the template repository to the new repository.."
+      git push --mirror https://api.github.com/orgs/sfdc-bt-puppet/${puppet_repo_name}.git
+      
+      echo "Checking if the team exist or not..!!"
+      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/orgs/sfdc-bt-puppet/teams | jq -r '.[] | .name' | grep ^${team_name}$
+      if [[ $? == 0 ]]
+      then
+        echo "The team already exist.."
+      else
+        echo "Team does not exist.."
+      fi
+      
+      echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
+      curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/sfdc-bt-puppet/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
+      
+      
+      
+
+      
