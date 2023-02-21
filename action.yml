@@ -54,14 +54,14 @@ runs:
       echo "Cloning the template repository to the new repository.."
       git push --mirror https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/${puppet_repo_name}.git
       
-      echo "Checking if the team exist or not..!!"
-      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/teams | jq -r '.[] | .name' | grep ${team_name}
-      if [[ $? != 0 ]]
-      then
-        echo "Team does not exist.."
-      else
-        echo "The team already exist..!!"
-        echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
+      #echo "Checking if the team exist or not..!!"
+      #curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/teams | jq -r '.[] | .name' | grep ${team_name}
+      #if [[ $? != 0 ]]
+      #then
+      #  echo "Team does not exist.."
+      #else
+      #  echo "The team already exist..!!"
+      #  echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
         #curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
         curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/prathima-chitturi -d '{"permission”:”maintain”}’
         
@@ -72,4 +72,4 @@ runs:
           echo "Unable to provide access..!!"
           exit 1
         fi
-      fi
+      #fi
