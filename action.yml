@@ -5,9 +5,6 @@ inputs:
     require: true
     type: number
     
-env: 
-  OWNER: 'pcherukusfdc'
-    
 runs:
   using: "composite"
   steps:
@@ -25,10 +22,12 @@ runs:
       puppet_repo_name=$(echo $changes | cut -d: -f1)
       team_name=$(echo $changes | cut -d: -f2)
       
-      echo ${OWNER}
-      
+   
       echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
       gh auth login --with-token < ~/.gh_secrets
+      
+      gh repo list
+      
       gh repo list | awk '{print $1}' | grep ${puppet_repo_name}
       if [[ $? == 0 ]]
       then
