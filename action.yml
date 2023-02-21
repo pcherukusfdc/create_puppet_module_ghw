@@ -44,7 +44,7 @@ runs:
       
       
       echo "Create repo from the template repo"
-      if [[ -d 'puppet_module_tpt' ]] ; then rm -rf puppet_module_tpt ; fi
+      if [[ -d 'puppet_module_tpt.git' ]] ; then rm -rf puppet_module_tpt.git ; fi
       
       git clone --bare https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/puppet_module_tpt.git
       
