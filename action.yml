@@ -40,7 +40,11 @@ runs:
       echo "Creating repository ${puppet_repo_name} in workspace "
       gh repo create ${puppet_repo_name} --public
       
+      cd git 
+      
       echo "Create repo from the template repo"
+      if [[ -d 'puppet_module_tpt' ]] ; then rm -rf puppet_module_tpt ; fi
+      
       git clone --bare https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/puppet_module_tpt.git
       
       echo "Changing into puppet template repository"
