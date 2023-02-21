@@ -63,7 +63,7 @@ runs:
       #  echo "The team already exist..!!"
       #  echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
         #curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
-        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/prathima-chitturi -d '{"permission”:”maintain”}’
+        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/prathima-chitturi -d '{"permission”:”maintain”}'
         
         if [[ $? == 0 ]]
         then
