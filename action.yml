@@ -3,10 +3,10 @@ description: 'create puppet module repository from template'
 inputs:
   pr_changes:
     require: true
-    type: string
+    type: number
     
-env: 
-  OWNER: 'pcherukusfdc'
+#env: 
+#  OWNER: 'pcherukusfdc'
     
 runs:
   using: "composite"
