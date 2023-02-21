@@ -35,7 +35,11 @@ runs:
       
       echo "----"
       
-      gh repo list | awk '{print $1}' | grep test_repo_using_pipeline_3
+      echo "#########"
+      gh repo list | grep 'test_repo_using_pipeline_4'
+      echo "#########"
+      
+      gh repo list | awk '{print $1}' | grep test_repo_using_pipeline_4
       if [[ $? == 0 ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
@@ -46,7 +50,7 @@ runs:
       fi
       
       echo "Creating repository ${puppet_repo_name} in workspace "
-      git clone 
+      gh repo create ${puppet_repo_name}
       
       echo "Create repo from the template repo"
       git clone --bare https://github.com/pcherukusfdc/puppet_module_tpt.git
@@ -58,7 +62,7 @@ runs:
       git push --mirror https://github.com/pcherukusfdc/${puppet_repo_name}.git
       
       echo "Checking if the team exist or not..!!"
-      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://github.com/pcherukusfdc/teams | jq -r '.[] | .name' | grep ^${team_name}$
+      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://github.com/pcherukusfdc/teams | jq -r '.[] | .name' | grep ${team_name}
       if [[ $? != 0 ]]
       then
         echo "Team does not exist.."
@@ -74,5 +78,5 @@ runs:
         else
           echo "Unable to provide access..!!"
           exit 1
-        fi      
+        fi
       fi
