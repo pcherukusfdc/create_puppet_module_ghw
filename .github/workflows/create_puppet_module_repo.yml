@@ -19,16 +19,16 @@ jobs:
       name: Checking which files changed 
       run: |
       
-        echo "Get the changes before we merge"
-        org_repo=${{ inputs.repo_name }}
-        repo_name=$(echo ${org_repo} | cut -d/ -f2)
+        #echo "Get the changes before we merge"
+        #org_repo=${{ inputs.repo_name }}
+        #repo_name=$(echo ${org_repo} | cut -d/ -f2)
         pr_number=${{ inputs.pr_number }}
         
         echo "Repo name is ${ org_repo } and the PR number is ${ pr_number }"
         URL="https://api.github.com/repos/${ org_repo }/pulls/${ pr_number }/files"
         FILES=$(curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" -G $URL | jq -r '.[] | .filename')
                
-        if [[ $FILES == 'release.txt' ]]
+        if [[ $FILES == 'repo_file.txt' ]]
         then
           echo "Release.txt modified, procedding further to deploy the code on puppet master..."
           echo "file_name=$FILES" >> $GITHUB_OUTPUT
@@ -61,7 +61,7 @@ jobs:
         fi
     - id: step2
       name: PR Approval and Merging
-      if: ${{ success() && steps.step1.outputs.file_name == 'release.txt' }} 
+      if: ${{ success() && steps.step1.outputs.file_name == 'repo_file.txt' }} 
       run: |
         #Setting UP Variables#
         orgAndRepo=${{ inputs.repo_name }}
@@ -112,7 +112,7 @@ jobs:
       
   processing_puppet_module_repo_creation_action:
     needs: processing_puppet_module_repo_creation
-    if: ${{ success() && needs.processing_release_manager.outputs.file_name == 'release.txt' }}
+    if: ${{ success() && needs.processing_release_manager.outputs.file_name == 'repo_file.txt' }}
     runs-on: [ self-hosted, linux, code_release ]
     strategy:
       matrix:
@@ -122,5 +122,5 @@ jobs:
       name: Deploying puppet module
       uses: pcherukusfdc/create_puppet_module_repo@main
       with:
-        repo_name: '${{ inputs.repo_name }}'
+        #repo_name: '${{ inputs.repo_name }}'
         pr_changes: ${{ matrix.list_of_changes }}
