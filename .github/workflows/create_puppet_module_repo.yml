@@ -112,11 +112,11 @@ jobs:
       
   processing_puppet_module_repo_creation_action:
     needs: processing_puppet_module_repo_creation
-    if: ${{ success() && needs.processing_release_manager.outputs.file_name == 'repo_file.txt' }}
+    if: ${{ success() && needs.processing_puppet_module_repo_creation.outputs.file_name == 'repo_file.txt' }}
     runs-on: [ self-hosted, linux, code_release ]
     strategy:
       matrix:
-        list_of_changes: ${{ fromJSON(needs.processing_release_manager.outputs.changes_from_pr) }}
+        list_of_changes: ${{ fromJSON(needs.processing_puppet_module_repo_creation.outputs.changes_from_pr) }}
     steps:
     - id: step3
       name: Deploying puppet module
