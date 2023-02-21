@@ -36,10 +36,10 @@ runs:
       echo "----"
       
       echo "#########"
-      gh repo list | grep 'test_repo_using_pipeline_4'
+      gh repo list | grep -q ${puppet_repo_name}
       echo "#########"
       
-      gh repo list | awk '{print $1}' | grep test_repo_using_pipeline_4
+      gh repo list | awk '{print $1}' | grep -q ${puppet_repo_name}
       if [[ $? == 0 ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
