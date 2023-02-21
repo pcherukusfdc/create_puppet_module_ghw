@@ -19,9 +19,9 @@ jobs:
       name: Checking which files changed 
       run: |
       
-        #echo "Get the changes before we merge"
-        #org_repo=${{ inputs.repo_name }}
-        #repo_name=$(echo ${org_repo} | cut -d/ -f2)
+        echo "Get the changes before we merge"
+        org_repo=${{ inputs.repo_name }}
+        repo_name=$(echo ${org_repo} | cut -d/ -f2)
         pr_number=${{ inputs.pr_number }}
         
         echo "Repo name is ${ org_repo } and the PR number is ${ pr_number }"
