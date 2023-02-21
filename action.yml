@@ -49,7 +49,7 @@ runs:
       git clone --bare https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/puppet_module_tpt.git
       
       echo "Changing into puppet template repository"
-      cd ${puppet_module_tpt}
+      cd puppet_module_tpt.git
      
       echo "Cloning the template repository to the new repository.."
       git push --mirror https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/${puppet_repo_name}.git
