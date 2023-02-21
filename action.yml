@@ -27,8 +27,8 @@ runs:
       echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
       gh auth login --with-token < ~/.gh_secrets
       
-      repo_list=$(gh repo list | awk '{print $1}')
-      if [[ $(grep ${puppet_repo_name} ${repo_list}) == 0 ]]
+      repo_list=$(gh repo list | awk '{print $1}' | sed 's/pcherukusfdc\//')
+      if [[ $(grep -q ${puppet_repo_name} ${repo_list}) == 0 ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
         gh auth logout --hostname github.com
@@ -38,7 +38,7 @@ runs:
       fi
       
       echo "Creating repository ${puppet_repo_name} in workspace "
-      gh repo create ${puppet_repo_name} -l --public
+      gh repo create ${puppet_repo_name} --public
       
       echo "Create repo from the template repo"
       git clone --bare https://github.com/pcherukusfdc/puppet_module_tpt.git
