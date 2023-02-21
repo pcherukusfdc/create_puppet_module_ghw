@@ -16,16 +16,19 @@ runs:
            
       changes=${{ inputs.pr_changes }}
       
+      echo " "
       echo "Extracting puppet repo name and team name"
-      echo ""
+      echo " "
       puppet_repo_name=$(echo $changes | cut -d: -f1)
       team_name=$(echo $changes | cut -d: -f2)
       
+      echo " "
       echo "Puppet repo to create ${puppet_repo_name}, team to give access is ${team_name}"
-      echo ""
+      echo " "
    
+      echo " "
       echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
-      echo ""
+      echo " "
       gh auth login --with-token < ~/.gh_secrets
       
       repo_status=$(curl -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name} | jq -r '.message')
@@ -34,34 +37,39 @@ runs:
       #if [[ $(grep -q ${puppet_repo_name} ${repo_list} 2>/dev/null) == 0 ]]
       if [[ ${repo_status} == 'Not Found' ]]
       then
+        echo " " 
         echo "Repository ${puppet_repo_name} does not exist, proceding to create.."
-        echo ""        
+        echo " "        
       else
+        echo " "
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
-        echo ""
+        echo " "
         gh auth logout --hostname github.com
         exit 0
       fi
       
+      echo " "
       echo "Creating empty repository ${puppet_repo_name} in GitHub GUI under pcherukusfdc workspace"
-      echo ""
+      echo " "
       gh repo create ${puppet_repo_name} --public
       
       echo $(pwd)
       
-      
+      echo " "
       echo "Clonning the template repo puppet_module_tpt"
-      echo ""
+      echo " "
       if [[ -d 'puppet_module_tpt.git' ]] ; then rm -rf puppet_module_tpt.git ; fi
       
       git clone --bare https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/puppet_module_tpt.git
       
+      echo " "
       echo "Changing into puppet template repository"
-      echo ""
+      echo " "
       cd puppet_module_tpt.git
      
+      echo " "
       echo "Push the template repository to the new repository.."
-      echo ""
+      echo " "
       git push --mirror https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/${puppet_repo_name}.git
       
       #echo "Checking if the team exist or not..!!"
@@ -77,11 +85,13 @@ runs:
         
         if [[ $? == 0 ]]
         then
+          echo " "
           echo "Provided access to the ${team} team to the repository ${puppet_repo_name}"
-          echo ""
+          echo " "
         else
+          echo " "
           echo "Unable to provide access..!!"
-          echo ""
+          echo " "
           exit 1
         fi
       #fi
