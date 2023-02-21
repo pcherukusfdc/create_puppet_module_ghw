@@ -28,7 +28,7 @@ runs:
       gh auth login --with-token < ~/.gh_secrets
       
       repo_list=$(gh repo list | awk '{print $1}' | sed 's/pcherukusfdc\///')
-      if [[ $(grep -q ${puppet_repo_name} ${repo_list}) == 0 ]]
+      if [[ $(grep -q ${puppet_repo_name} ${repo_list} 2>/dev/null) == 0 ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
         gh auth logout --hostname github.com
@@ -39,6 +39,8 @@ runs:
       
       echo "Creating repository ${puppet_repo_name} in workspace "
       gh repo create ${puppet_repo_name} --public
+      
+      echo $pwd
       
       cd git 
       
