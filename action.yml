@@ -36,7 +36,7 @@ runs:
       echo "----"
       
       echo "#########"
-      gh repo list | grep -q ${puppet_repo_name}
+      gh repo list | grep -q ${puppet_repo_name} || echo "::error::Unexpected version" && exit 1
       echo "#########"
       
       gh repo list | awk '{print $1}' | grep -q ${puppet_repo_name}
