@@ -26,7 +26,7 @@ runs:
       team_name=$(echo $changes | cut -d: -f2)
       
       echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
-      gh repo list | awk '{print $1}' | sed 's/pcherukusfdc\///g'  | grep ^${puppet_repo_name}$
+      gh repo list | awk '{print $1}' | sed "s/${OWNER}\///g"  | grep ^${puppet_repo_name}$
       if [[ $? == 0 ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
@@ -36,27 +36,28 @@ runs:
       fi
       
       echo "Creating repository ${puppet_repo_name} in workspace "
-      echo "Cloning the template repo"
       git clone 
       
       echo "Create repo from the template repo"
-      git clone --bare https://api.github.com/orgs/sfdc-bt-puppet/
+      git clone --bare https://api.github.com/orgs/${OWNER}/puppet_module_tpt.git
       
       echo "Changing into puppet template repository"
-      cd ${}
-      
+      cd ${puppet_module_tpt}
+     
       echo "Cloning the template repository to the new repository.."
-      git push --mirror https://api.github.com/orgs/sfdc-bt-puppet/${puppet_repo_name}.git
+      git push --mirror https://api.github.com/orgs/${OWNER}/${puppet_repo_name}.git
       
       echo "Checking if the team exist or not..!!"
-      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/orgs/sfdc-bt-puppet/teams | jq -r '.[] | .name' | grep ^${team_name}$
+      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/orgs/${OWNER}/teams | jq -r '.[] | .name' | grep ^${team_name}$
       if [[ $? != 0 ]]
       then
         echo "Team does not exist.."
       else
         echo "The team already exist..!!"
         echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
-        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/sfdc-bt-puppet/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
+        #curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/${OWNER}/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
+        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/${OWNER}/${puppet_repo_name}/collaborators/prathima-chitturi -d '{"permission”:”maintain”}’
+        
         if [[ $? == 0 ]]
         then
           echo "Provided access to the ${team} team to the repository ${puppet_repo_name}"
@@ -65,4 +66,3 @@ runs:
           exit 1
         fi      
       fi
-      
