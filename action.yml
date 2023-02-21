@@ -5,6 +5,9 @@ inputs:
     require: true
     type: string
     
+env: 
+  OWNER: 'pcherukusfdc'
+    
 runs:
   using: "composite"
   steps:
@@ -47,17 +50,19 @@ runs:
       
       echo "Checking if the team exist or not..!!"
       curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/orgs/sfdc-bt-puppet/teams | jq -r '.[] | .name' | grep ^${team_name}$
-      if [[ $? == 0 ]]
+      if [[ $? != 0 ]]
       then
-        echo "The team already exist.."
-      else
         echo "Team does not exist.."
+      else
+        echo "The team already exist..!!"
+        echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
+        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/sfdc-bt-puppet/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
+        if [[ $? == 0 ]]
+        then
+          echo "Provided access to the ${team} team to the repository ${puppet_repo_name}"
+        else
+          echo "Unable to provide access..!!"
+          exit 1
+        fi      
       fi
-      
-      echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
-      curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/sfdc-bt-puppet/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
-      
-      
-      
-
       
