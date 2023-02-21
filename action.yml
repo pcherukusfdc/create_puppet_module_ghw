@@ -27,6 +27,12 @@ runs:
       gh auth login --with-token < ~/.gh_secrets
       
       gh repo list
+      echo ""
+      echo "---"
+      
+      gh repo list | awk '{print $1}'
+      
+      echo "----"
       
       gh repo list | awk '{print $1}' | grep ${puppet_repo_name}
       if [[ $? == 0 ]]
