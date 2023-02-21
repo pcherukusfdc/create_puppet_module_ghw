@@ -122,5 +122,4 @@ jobs:
       name: Deploying puppet module
       uses: pcherukusfdc/create_puppet_module_repo@main
       with:
-        #repo_name: '${{ inputs.repo_name }}'
         pr_changes: ${{ matrix.list_of_changes }}
