@@ -28,7 +28,7 @@ runs:
       gh auth login --with-token < ~/.gh_secrets
       
       repo_list=$(gh repo list | awk '{print $1}')
-      if [[ echo ${repo_list} | grep ${puppet_repo_name} ]]
+      if [[ grep ${puppet_repo_name} ${repo_list} ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
         gh auth logout --hostname github.com
