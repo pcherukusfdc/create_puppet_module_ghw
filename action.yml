@@ -41,24 +41,24 @@ runs:
       gh repo create ${puppet_repo_name} --public
       
       echo "Create repo from the template repo"
-      git clone --bare https://github.com/pcherukusfdc/puppet_module_tpt.git
+      git clone --bare https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/puppet_module_tpt.git
       
       echo "Changing into puppet template repository"
       cd ${puppet_module_tpt}
      
       echo "Cloning the template repository to the new repository.."
-      git push --mirror https://github.com/pcherukusfdc/${puppet_repo_name}.git
+      git push --mirror https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/${puppet_repo_name}.git
       
       echo "Checking if the team exist or not..!!"
-      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://github.com/pcherukusfdc/teams | jq -r '.[] | .name' | grep ${team_name}
+      curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/teams | jq -r '.[] | .name' | grep ${team_name}
       if [[ $? != 0 ]]
       then
         echo "Team does not exist.."
       else
         echo "The team already exist..!!"
         echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
-        #curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://github.com/pcherukusfdc/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
-        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://github.com/pcherukusfdc/${puppet_repo_name}/collaborators/prathima-chitturi -d '{"permission”:”maintain”}’
+        #curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
+        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/prathima-chitturi -d '{"permission”:”maintain”}’
         
         if [[ $? == 0 ]]
         then
