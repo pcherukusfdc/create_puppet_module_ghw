@@ -35,7 +35,7 @@ runs:
       
       echo "----"
       
-      gh repo list | awk '{print $1}' | grep ${puppet_repo_name}
+      gh repo list | awk '{print $1}' | grep test_repo_using_pipeline_3
       if [[ $? == 0 ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
