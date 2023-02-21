@@ -27,7 +27,7 @@ runs:
       echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
       gh auth login --with-token < ~/.gh_secrets
       
-      repo_list=$(gh repo list | awk '{print $1}' | sed 's/pcherukusfdc\//')
+      repo_list=$(gh repo list | awk '{print $1}' | sed 's/pcherukusfdc\///')
       if [[ $(grep -q ${puppet_repo_name} ${repo_list}) == 0 ]]
       then
         echo "Repository ${puppet_repo_name} already exist, quitting..!!"
