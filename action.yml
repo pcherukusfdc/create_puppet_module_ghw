@@ -60,9 +60,9 @@ runs:
       echo "Adding new repo file to github org manager repo..!!"
       echo " "
       
-      touch repos/${puppet_repo_name}.yaml
+      #touch repos/${puppet_repo_name}.yaml
       
-      echo ${content} > repos/${puppet_repo_name}.yaml
+      cat ${content} > repos/${puppet_repo_name}.yaml
       
       echo " "
       echo "Adding changes to the local workspace..!!"
