@@ -23,6 +23,65 @@ runs:
       team_name=$(echo $changes | cut -d: -f2)
       
       echo " "
+      echo "Creating a file under github org manager"
+      echo " "
+      
+      content="archived: false
+               branch_protection_rules: []
+               default_branch: main
+               description: ''
+               name: ${puppet_repo_name}
+               teams: []
+               users: []
+               visibility: PRIVATE"
+               
+      gh auth login --with-token < ~/.gh_secrets
+      
+      echo " "
+      echo "Cloning github org manager repo..!!"
+      echo " "
+      
+      gh repo clone https://github.com/pcherukusfdc/github_org_manager_pcheruku.git
+      
+      echo " "
+      echo "Changing into github org manager repo..!!"
+      echo " "
+      
+      cd ${github_org_manager_pcheruku}
+      
+      echo " "
+      echo "Adding new repo file to github org manager repo..!!"
+      echo " "
+      
+      echo ${content} > repos/${puppet_repo_name}.yaml
+      
+      echo " "
+      echo "Adding changes to the local workspace..!!"
+      echo " "
+      
+      git add .
+      
+      echo " "
+      echo "Committing changes to the local workspace!!"
+      echo " "
+      
+      git commit -m "Add ${puppet_repo_name} repo to github org manager"
+      
+      echo " "
+      echo "Push changes to the github org manager main branch..!!"
+      echo " "
+      
+      git push origin main
+      if [[ $? != 0 ]]
+      then
+        echo "Changes not pushed to github org manager..!!"
+        gh auth logout --hostname github.com
+        exit 1
+      else
+        echo "Changes pushed to github org manager..!!"
+      fi
+      
+      echo " "
       echo "Puppet repo to create ${puppet_repo_name}, team to give access is ${team_name}"
       echo " "
    
