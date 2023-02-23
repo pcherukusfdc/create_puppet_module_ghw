@@ -26,6 +26,11 @@ runs:
       echo "Creating a file under github org manager"
       echo " "
       
+      whoami
+      
+      pwd
+      
+      
       content="archived: false
                branch_protection_rules: []
                default_branch: main
