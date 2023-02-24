@@ -40,16 +40,10 @@ runs:
                teams: []
                users: []
                visibility: PRIVATE"
-               
-      gh auth login --with-token < ~/.gh_secrets
-      
-      echo " "
-      echo "Cloning github org manager repo..!!"
-      echo " "
-      
-      
       
       if [[ -d github_org_manager_pcheruku ]] ; then rm -rf github_org_manager_pcheruku ; fi
+      
+      gh auth login --with-token < ~/.gh_secrets
       
       gh repo clone https://github.com/pcherukusfdc/github_org_manager_pcheruku.git
       
