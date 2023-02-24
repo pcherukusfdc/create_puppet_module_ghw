@@ -16,8 +16,6 @@ runs:
            
       changes=${{ inputs.pr_changes }}
       
-      cd ~/puppet_dir
-      
       echo " "
       echo "Extracting puppet repo name and team name"
       echo " "
@@ -51,7 +49,7 @@ runs:
       echo "Changing into github org manager repo..!!"
       echo " "
       
-      cd "~/puppet_dir/github_org_manager_pcheruku/repos"
+      cd "github_org_manager_pcheruku/repos"
       
       echo " "
       echo "Adding new repo file to github org manager repo..!!"
