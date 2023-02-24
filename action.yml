@@ -30,7 +30,7 @@ runs:
       
       pwd
       
-      content="archived: false \n branch_protection_rules: [] \n default_branch: main description: '' \n name: ${puppet_repo_name} \n teams: [] \n users: [] \n visibility: PRIVATE"
+      content="archived: false \nbranch_protection_rules: [] \ndefault_branch: main description: '' \nname: ${puppet_repo_name} \nteams: [] \nusers: [] \nvisibility: PRIVATE"
       
       if [[ -d github_org_manager_pcheruku ]] ; then rm -rf github_org_manager_pcheruku ; fi
       
@@ -68,7 +68,7 @@ runs:
       echo "Push changes to the github org manager main branch..!!"
       echo " "
       
-      git push origin main
+      git push origin https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/github_org_manager_pcheruku.git
       if [[ $? != 0 ]]
       then
         echo "Changes not pushed to github org manager..!!"
@@ -85,7 +85,7 @@ runs:
       echo " "
       echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
       echo " "
-      gh auth login --with-token < ~/.gh_secrets
+      #gh auth login --with-token < ~/.gh_secrets
       
       repo_status=$(curl -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name} | jq -r '.message')
       
