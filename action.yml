@@ -16,6 +16,8 @@ runs:
            
       changes=${{ inputs.pr_changes }}
       
+      cd ~/puppet_dir
+      
       echo " "
       echo "Extracting puppet repo name and team name"
       echo " "
@@ -29,7 +31,6 @@ runs:
       whoami
       
       pwd
-      
       
       content="archived: false
                branch_protection_rules: []
@@ -46,7 +47,7 @@ runs:
       echo "Cloning github org manager repo..!!"
       echo " "
       
-      cd ~/puppet_dir
+      
       
       if [[ -d github_org_manager_pcheruku ]] ; then rm -rf github_org_manager_pcheruku ; fi
       
@@ -56,7 +57,7 @@ runs:
       echo "Changing into github org manager repo..!!"
       echo " "
       
-      cd ${github_org_manager_pcheruku}/repos
+      cd "${github_org_manager_pcheruku}/repos"
       
       echo " "
       echo "Adding new repo file to github org manager repo..!!"
