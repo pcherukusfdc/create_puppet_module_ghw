@@ -46,6 +46,8 @@ runs:
       echo "Cloning github org manager repo..!!"
       echo " "
       
+      cd ~/puppet_dir
+      
       if [[ -d github_org_manager_pcheruku ]] ; then rm -rf github_org_manager_pcheruku ; fi
       
       gh repo clone https://github.com/pcherukusfdc/github_org_manager_pcheruku.git
@@ -54,15 +56,15 @@ runs:
       echo "Changing into github org manager repo..!!"
       echo " "
       
-      cd ${github_org_manager_pcheruku}
+      cd ${github_org_manager_pcheruku}/repos
       
       echo " "
       echo "Adding new repo file to github org manager repo..!!"
       echo " "
       
-      #touch repos/${puppet_repo_name}.yaml
+      touch ${puppet_repo_name}.yaml
       
-      cat ${content} > repos/${puppet_repo_name}.yaml
+      cat ${content} > ${puppet_repo_name}.yaml
       
       echo " "
       echo "Adding changes to the local workspace..!!"
@@ -74,7 +76,7 @@ runs:
       echo "Committing changes to the local workspace!!"
       echo " "
       
-      git commit -m "Add ${puppet_repo_name} repo to github org manager"
+      git commit -m "Added ${puppet_repo_name} repo to github org manager"
       
       echo " "
       echo "Push changes to the github org manager main branch..!!"
