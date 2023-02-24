@@ -30,14 +30,7 @@ runs:
       
       pwd
       
-      content="archived: false
-               branch_protection_rules: []
-               default_branch: main
-               description: ''
-               name: ${puppet_repo_name}
-               teams: []
-               users: []
-               visibility: PRIVATE"
+      content="archived: false \n branch_protection_rules: [] \n default_branch: main description: '' \n name: ${puppet_repo_name} \n teams: [] \n users: [] \n visibility: PRIVATE"
       
       if [[ -d github_org_manager_pcheruku ]] ; then rm -rf github_org_manager_pcheruku ; fi
       
@@ -57,7 +50,7 @@ runs:
       
       touch ${puppet_repo_name}.yaml
       
-      cat ${content} > ${puppet_repo_name}.yaml
+      echo -e ${content} > ${puppet_repo_name}.yaml
       
       echo " "
       echo "Adding changes to the local workspace..!!"
