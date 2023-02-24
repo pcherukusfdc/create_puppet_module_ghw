@@ -51,7 +51,7 @@ runs:
       echo "Changing into github org manager repo..!!"
       echo " "
       
-      cd "~/puppet_dir/${github_org_manager_pcheruku}/repos"
+      cd "~/puppet_dir/github_org_manager_pcheruku/repos"
       
       echo " "
       echo "Adding new repo file to github org manager repo..!!"
