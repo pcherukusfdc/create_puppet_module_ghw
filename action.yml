@@ -44,14 +44,14 @@ runs:
       if [[ -d github_org_manager_pcheruku ]] ; then rm -rf github_org_manager_pcheruku ; fi
       
       gh auth login --with-token < ~/.gh_secrets
-      
-      gh repo clone https://github.com/pcherukusfdc/github_org_manager_pcheruku.git
+      gh auth status
+      gh repo clone "https://github.com/pcherukusfdc/github_org_manager_pcheruku.git"
       
       echo " "
       echo "Changing into github org manager repo..!!"
       echo " "
       
-      cd "${github_org_manager_pcheruku}/repos"
+      cd "~/puppet_dir/${github_org_manager_pcheruku}/repos"
       
       echo " "
       echo "Adding new repo file to github org manager repo..!!"
