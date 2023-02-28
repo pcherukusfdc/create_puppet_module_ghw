@@ -73,6 +73,114 @@ jobs:
     steps:
     - id: step3
       name: Deploying puppet module
-      uses: pcherukusfdc/create_puppet_module_repo@main
-      with:
-        pr_changes: ${{ matrix.list_of_changes }}
+      echo " "
+      echo "Extracting puppet repo name and team name"
+      puppet_repo_name=$(echo $changes | cut -d: -f1)
+      team_name=$(echo $changes | cut -d: -f2)
+      
+      echo " "
+      echo "Creating a file under github org manager"
+      
+      content="archived: false \nbranch_protection_rules: [] \ndefault_branch: main description: '' \nname: ${puppet_repo_name} \nteams: [] \nusers: [] \nvisibility: PRIVATE"
+      
+      if [[ -d github_org_manager_pcheruku ]] ; then rm -rf github_org_manager_pcheruku ; fi
+      
+      gh auth login --with-token < ~/.gh_secrets
+      gh auth status
+      gh repo clone "https://github.com/pcherukusfdc/github_org_manager_pcheruku.git"
+      
+      echo " "
+      echo "Changing into github org manager repo..!!"
+      
+      cd "github_org_manager_pcheruku/repos"
+      
+      echo " "
+      echo "Adding new repo file to github org manager repo..!!"
+      
+      touch ${puppet_repo_name}.yaml
+      
+      echo -e ${content} > ${puppet_repo_name}.yaml
+      
+      echo " "
+      echo "Adding changes to the local workspace..!!"
+      
+      git add .
+      
+      echo " "
+      echo "Committing changes to the local workspace!!"
+      
+      git commit -m "Added ${puppet_repo_name} repo to github org manager"
+      
+      echo " "
+      echo "Push changes to the github org manager main branch..!!"
+      
+      git push origin https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/github_org_manager_pcheruku.git
+      if [[ $? != 0 ]]
+      then
+        echo "Changes not pushed to github org manager..!!"
+        gh auth logout --hostname github.com
+        exit 1
+      else
+        echo "Changes pushed to github org manager..!!"
+      fi
+      
+      echo " "
+      echo "Puppet repo to create ${puppet_repo_name}, team to give access is ${team_name}"
+   
+      echo " "
+      echo "Checking the ${puppet_repo_name} repo in workspace already existing or not.."
+      
+      repo_status=$(curl -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name} | jq -r '.message')
+      
+      if [[ ${repo_status} == 'Not Found' ]]
+      then
+        echo " " 
+        echo "Repository ${puppet_repo_name} does not exist, proceding to create.."
+      else
+        echo " "
+        echo "Repository ${puppet_repo_name} already exist, quitting..!!"
+        gh auth logout --hostname github.com
+        exit 0
+      fi
+      
+      echo " "
+      echo "Creating empty repository ${puppet_repo_name} in GitHub GUI under pcherukusfdc workspace"
+      gh repo create ${puppet_repo_name} --public
+      
+      echo $(pwd)
+      
+      echo " "
+      echo "Clonning the template repo puppet_module_tpt"
+      if [[ -d 'puppet_module_tpt.git' ]] ; then rm -rf puppet_module_tpt.git ; fi
+      
+      git clone --bare https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/puppet_module_tpt.git
+      
+      echo " "
+      echo "Changing into puppet template repository"
+      cd puppet_module_tpt.git
+     
+      echo " "
+      echo "Push the template repository to the new repository.."
+      git push --mirror https://oauth2:$(cat ~/.gh_secrets)@github.com/pcherukusfdc/${puppet_repo_name}.git
+      
+      #echo "Checking if the team exist or not..!!"
+      #curl -s -X GET -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/teams | jq -r '.[] | .name' | grep ${team_name}
+      #if [[ $? != 0 ]]
+      #then
+      #  echo "Team does not exist.."
+      #else
+      #  echo "The team already exist..!!"
+      #  echo "Give maintainer access to the team ${team} for repo ${puppet_repo_name}"
+        #curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/${team} -d '{"permission”:”maintain”}’
+        curl -X PUT -H "Authorization: Bearer $(cat ~/.gh_secrets)" https://api.github.com/repos/pcherukusfdc/${puppet_repo_name}/collaborators/prathima-chitturi -d '{"permission”:”maintain”}' >/dev/null
+        
+        if [[ $? == 0 ]]
+        then
+          echo " "
+          echo "Provided access to the ${team} team to the repository ${puppet_repo_name}"
+        else
+          echo " "
+          echo "Unable to provide access..!!"
+          exit 1
+        fi
+      #fi
